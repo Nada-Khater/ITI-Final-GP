@@ -30,3 +30,18 @@
         name: "{{ lookup('env','USER') }}"
         groups: docker
         append: yes
+
+    - name: Download Minikube binary
+      get_url:
+        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        dest: /usr/local/bin/minikube
+        mode: '0755'
+
+    - name: Install Minikube
+      command: chmod +x /usr/local/bin/minikube
+
+    - name: Log out and log back in to apply Docker group membership
+      shell: |
+        sudo su - $USER -c "newgrp docker <<EONG
+        echo 'Docker group membership applied.'
+        EONG"
