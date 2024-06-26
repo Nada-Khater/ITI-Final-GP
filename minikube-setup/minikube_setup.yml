@@ -45,3 +45,29 @@
         sudo su - $USER -c "newgrp docker <<EONG
         echo 'Docker group membership applied.'
         EONG"
+
+    - name: Start Minikube
+      become: no
+      become_user: "{{ lookup('env','USER') }}"
+      shell: minikube start --driver=docker
+
+    - name: Enable kubectl bash completion
+      lineinfile:
+        path: /home/{{ lookup('env','USER') }}/.bashrc
+        line: 'source <(kubectl completion bash)'
+      become: no
+      become_user: "{{ lookup('env','USER') }}"
+
+    - name: Install kubectl alias
+      lineinfile:
+        path: /home/{{ lookup('env','USER') }}/.bashrc
+        line: 'alias k=kubectl'
+      become: no
+      become_user: "{{ lookup('env','USER') }}"
+
+    - name: Apply bash completion
+      shell: . /home/{{ lookup('env','USER') }}/.bashrc
+      args:
+        executable: /bin/bash
+      become: no
+      become_user: "{{ lookup('env','USER') }}"
