@@ -42,3 +42,8 @@
 
     - name: Start Minikube
       command: minikube start --driver=docker
+
+    - name: Enable kubectl bash completion
+      lineinfile:
+        path: ~/.bashrc
+        line: 'source <(kubectl completion bash)'
