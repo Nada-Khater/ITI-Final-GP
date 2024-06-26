@@ -36,3 +36,6 @@
         url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
         dest: /usr/local/bin/minikube
         mode: '0755'
+
+    - name: Install Minikube
+      command: chmod +x /usr/local/bin/minikube
