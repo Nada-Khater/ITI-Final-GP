@@ -52,3 +52,6 @@
       lineinfile:
         path: ~/.bashrc
         line: 'alias k=kubectl'
+
+    - name: Apply bash completion
+      shell: source ~/.bashrc
