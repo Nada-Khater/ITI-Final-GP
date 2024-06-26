@@ -41,6 +41,7 @@
       command: chmod +x /usr/local/bin/minikube
 
     - name: Start Minikube
+      become: no
       command: minikube start --driver=docker
 
     - name: Enable kubectl bash completion
