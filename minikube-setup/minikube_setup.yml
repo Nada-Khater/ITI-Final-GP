@@ -39,3 +39,6 @@
 
     - name: Install Minikube
       command: chmod +x /usr/local/bin/minikube
+
+    - name: Start Minikube
+      command: minikube start --driver=docker
