@@ -40,16 +40,20 @@
     - name: Install Minikube
       command: chmod +x /usr/local/bin/minikube
 
-    - name: Log out and log back in to apply Docker group membership
-      shell: |
-        sudo su - $USER -c "newgrp docker <<EONG
-        echo 'Docker group membership applied.'
-        EONG"
-
-    - name: Start Minikube
+    - name: Create a shell script to start Minikube
+      copy:
+        dest: /home/{{ lookup('env','USER') }}/start_minikube.sh
+        content: |
+          #!/bin/bash
+          newgrp docker <<EONG
+          minikube start --driver=docker
+          EONG
+      mode: '0755'
       become: no
-      become_user: "{{ lookup('env','USER') }}"
-      shell: minikube start --driver=docker
+
+    - name: Run the shell script to start Minikube
+      command: /home/{{ lookup('env','USER') }}/start_minikube.sh
+      become: no
 
     - name: Enable kubectl bash completion
       lineinfile:
