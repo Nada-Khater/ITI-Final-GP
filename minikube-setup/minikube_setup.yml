@@ -30,3 +30,9 @@
         name: "{{ lookup('env','USER') }}"
         groups: docker
         append: yes
+
+    - name: Download Minikube binary
+      get_url:
+        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        dest: /usr/local/bin/minikube
+        mode: '0755'
