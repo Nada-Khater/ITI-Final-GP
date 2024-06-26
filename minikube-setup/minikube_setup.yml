@@ -42,7 +42,7 @@
 
     - name: Start Minikube
       become: no
-      command: minikube start --driver=docker
+      command: "newgrp docker && minikube start --driver=docker"
 
     - name: Enable kubectl bash completion
       lineinfile:
