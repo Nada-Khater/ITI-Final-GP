@@ -40,19 +40,15 @@
     - name: Install Minikube
       command: chmod +x /usr/local/bin/minikube
 
-    - name: Create a shell script to start Minikube
-      copy:
-        dest: /home/{{ lookup('env','USER') }}/start_minikube.sh
-        content: |
-          #!/bin/bash
-          newgrp docker <<EONG
-          minikube start --driver=docker
-          EONG
-        mode: '0755'
-      become: no
+    - name: Adjust Docker permissions
+      file:
+        path: /var/run/docker.sock
+        owner: "{{ lookup('env','USER') }}"
+        group: docker
+        mode: '0660'
 
-    - name: Run the shell script to start Minikube
-      command: /home/{{ lookup('env','USER') }}/start_minikube.sh
+    - name: Start Minikube
+      command: minikube start --driver=docker
       become: no
 
     - name: Enable kubectl bash completion
