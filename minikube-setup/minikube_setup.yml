@@ -58,10 +58,13 @@
       become: no
       become_user: "{{ lookup('env','USER') }}"
 
-    - name: Install kubectl alias
+    - name: Install kubectl
+      command: snap install kubectl --classic
+
+    - name: Update PATH for kubectl
       lineinfile:
         path: /home/{{ lookup('env','USER') }}/.bashrc
-        line: 'alias k=kubectl'
+        line: 'export PATH=$PATH:/snap/bin'
       become: no
       become_user: "{{ lookup('env','USER') }}"
 
