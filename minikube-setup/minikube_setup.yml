@@ -1,76 +1,76 @@
 ---
 - name: Setup Minikube on Ubuntu
-  hosts: local
-  become: yes
+  hosts: local  # Specifies the target hosts where tasks will run (where "local" refers to localhost)
+  become: yes   # Enables privilege escalation for tasks that require root access
 
   tasks:
     - name: Update and upgrade apt packages
       apt:
-        update_cache: yes
-        upgrade: dist
+        update_cache: yes  # Ensures the apt package cache is updated
+        upgrade: dist      # Upgrades all installed packages to the latest versions
 
     - name: Install dependencies
       apt:
         name:
-          - python3
-          - python3-pip
-          - curl
-          - apt-transport-https
-          - ca-certificates
-          - software-properties-common
-          - conntrack
-          - socat
-          - ebtables
-          - docker.io
-        state: present
-        update_cache: yes
+          - python3                 
+          - python3-pip             
+          - curl                    # Installs curl for transferring data with URLs
+          - apt-transport-https     # Allows the use of HTTPS for APT repository access
+          - ca-certificates         # Installs CA certificates for validating SSL connections
+          - software-properties-common  
+          - conntrack               # Tracks connection information
+          - socat                   # Allows bidirectional data transfer
+          - ebtables                # Tool for Ethernet bridge filtering
+          - docker.io               # Installs Docker engine
+        state: present             # Ensures packages are installed
+        update_cache: yes          # Updates the apt package cache before installation
 
     - name: Add user to docker group
       user:
-        name: "{{ lookup('env','USER') }}"
-        groups: docker
-        append: yes
+        name: "{{ lookup('env','USER') }}"  # Retrieves the current user dynamically
+        groups: docker                      # Adds the user to the 'docker' group
+        append: yes                         # Appends the user to the group if already exists
 
     - name: Download Minikube binary
       get_url:
-        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-        dest: /usr/local/bin/minikube
-        mode: '0755'
+        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64  # URL to download Minikube binary
+        dest: /usr/local/bin/minikube    # Destination path on the local machine
+        mode: '0755'                     # Sets executable permissions on the downloaded file
 
     - name: Install Minikube
-      command: chmod +x /usr/local/bin/minikube
+      command: chmod +x /usr/local/bin/minikube  # Changes permissions to make Minikube executable
 
     - name: Adjust Docker permissions
       file:
-        path: /var/run/docker.sock
-        owner: "{{ lookup('env','USER') }}"
-        group: docker
-        mode: '0660'
+        path: /var/run/docker.sock       # Path to the Docker socket file
+        owner: "{{ lookup('env','USER') }}"  # Sets the owner of the Docker socket to the current user
+        group: docker                    # Sets the group of the Docker socket to 'docker'
+        mode: '0660'                     # Sets read and write permissions for user and group
 
     - name: Start Minikube
-      command: minikube start --driver=docker
-      become: no
+      command: minikube start --driver=docker  # Starts Minikube using the Docker driver
+      become: no                            # Disables privilege escalation for this command
 
     - name: Enable kubectl bash completion
       lineinfile:
-        path: /home/{{ lookup('env','USER') }}/.bashrc
-        line: 'source <(kubectl completion bash)'
-      become: no
-      become_user: "{{ lookup('env','USER') }}"
+        path: /home/{{ lookup('env','USER') }}/.bashrc  # Path to the user's bashrc file
+        line: 'source <(kubectl completion bash)'      # Configures bash completion for kubectl
+      become: no                                      # Disables privilege escalation
+      become_user: "{{ lookup('env','USER') }}"       # Runs as the current user
 
     - name: Install kubectl
-      command: snap install kubectl --classic
+      command: snap install kubectl --classic    # Installs kubectl via Snap package manager
 
     - name: Update PATH for kubectl
       lineinfile:
-        path: /home/{{ lookup('env','USER') }}/.bashrc
-        line: 'export PATH=$PATH:/snap/bin'
-      become: no
-      become_user: "{{ lookup('env','USER') }}"
+        path: /home/{{ lookup('env','USER') }}/.bashrc  # Path to the user's bashrc file
+        line: 'export PATH=$PATH:/snap/bin'             # Adds Snap bin directory to PATH
+      become: no                                       # Disables privilege escalation
+      become_user: "{{ lookup('env','USER') }}"        # Runs as the current user
 
     - name: Apply bash completion
-      shell: . /home/{{ lookup('env','USER') }}/.bashrc
+      shell: . /home/{{ lookup('env','USER') }}/.bashrc  # Sources the updated bashrc to apply changes
       args:
         executable: /bin/bash
-      become: no
-      become_user: "{{ lookup('env','USER') }}"
+      become: no                                        # Disables privilege escalation
+      become_user: "{{ lookup('env','USER') }}"         # Runs as the current user
