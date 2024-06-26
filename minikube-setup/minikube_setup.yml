@@ -30,27 +30,3 @@
         name: "{{ lookup('env','USER') }}"
         groups: docker
         append: yes
-
-    - name: Download Minikube binary
-      get_url:
-        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-        dest: /usr/local/bin/minikube
-        mode: '0755'
-
-    - name: Install Minikube
-      command: chmod +x /usr/local/bin/minikube
-
-    - name: Enable kubectl bash completion
-      lineinfile:
-        path: ~/.bashrc
-        line: 'source <(kubectl completion bash)'
-
-    - name: Install kubectl alias
-      lineinfile:
-        path: ~/.bashrc
-        line: 'alias k=kubectl'
-
-    - name: Apply bash completion
-      shell: . ~/.bashrc
-      args:
-        executable: /bin/bash
