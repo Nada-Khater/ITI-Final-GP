@@ -40,10 +40,6 @@
     - name: Install Minikube
       command: chmod +x /usr/local/bin/minikube
 
-    - name: Start Minikube
-      become: no
-      command: "newgrp docker && minikube start --driver=docker"
-
     - name: Enable kubectl bash completion
       lineinfile:
         path: ~/.bashrc
