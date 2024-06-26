@@ -55,4 +55,6 @@
         line: 'alias k=kubectl'
 
     - name: Apply bash completion
-      shell: source ~/.bashrc
+      shell: . ~/.bashrc
+      args:
+        executable: /bin/bash
