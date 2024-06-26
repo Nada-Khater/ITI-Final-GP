@@ -48,7 +48,7 @@
           newgrp docker <<EONG
           minikube start --driver=docker
           EONG
-      mode: '0755'
+        mode: '0755'
       become: no
 
     - name: Run the shell script to start Minikube
