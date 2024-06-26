@@ -47,3 +47,8 @@
       lineinfile:
         path: ~/.bashrc
         line: 'source <(kubectl completion bash)'
+
+    - name: Install kubectl alias
+      lineinfile:
+        path: ~/.bashrc
+        line: 'alias k=kubectl'
