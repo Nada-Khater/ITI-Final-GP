@@ -1,5 +1,5 @@
 ---
-- name: Setup Minikube on Ubuntu
+- name: Setup Minikube
   hosts: local  # Specify the target hosts where tasks will run (where "local" refers to localhost)
   become: yes   # Enables privilege escalation for tasks that require root access
 
