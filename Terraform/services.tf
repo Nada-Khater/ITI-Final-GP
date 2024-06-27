@@ -1,8 +1,8 @@
 resource "kubernetes_service" "services" {
-    for_each = var.svc-data
+  for_each = var.svc-data
   metadata {
     name      = each.value.name
-    namespace = var.ns-names[1]
+    namespace = var.ns-names[each.value.namespace]
     labels = each.value.labels
   }
   spec {

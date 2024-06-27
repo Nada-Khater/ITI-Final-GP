@@ -3,6 +3,26 @@ variable "ns-names" {
   default = [ "dev", "tools" ]
 }
 
+variable "mysql_root_password" {
+  type      = string
+  sensitive = true
+}
+
+variable "mysql_db_name" {
+  type      = string
+  sensitive = true
+}
+
+variable "mysql_user_name" {
+  type      = string
+  sensitive = true
+}
+
+variable "mysql_user_password" {
+  type      = string
+  sensitive = true
+}
+
 variable "pv-data" {
   type = map(object({
     storage      = string
@@ -28,26 +48,52 @@ variable "svc-data" {
     name        = string
     port        = number
     target_port = number
-    type = string
+    type        = string
     labels      = map(string)
+    namespace   = number
   }))
   default = {
     jenkins = {
       name        = "jenkins"
       port        = 80
       target_port = 8080
-      type = "NodePort"
+      namespace   = 1     // tools ns
+      type        = "NodePort"
       labels      = {
         app = "jenkins"
       }
+      
     }
     nexus = {
       name        = "nexus"
       port        = 80
       target_port = 8081
-      type = "NodePort"
+      namespace   = 1     // tools ns
+      type        = "NodePort"
       labels      = {
         app = "nexus"
+      }
+    }
+
+    mysql = {
+      name        = "mysql"
+      port        = 3306
+      target_port = 3306
+      namespace   = 0     // dev ns
+      type        = "ClusterIP"
+      labels      = {
+        app = "mysql"
+      }
+    }
+
+    nodejs = {
+      name        = "nodejs"
+      port        = 80
+      target_port = 3000
+      namespace   = 0     // dev ns
+      type        = "NodePort"
+      labels      = {
+        app = "nodejs"
       }
     }
   }
