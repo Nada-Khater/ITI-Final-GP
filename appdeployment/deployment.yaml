@@ -7,11 +7,11 @@ spec:
   replicas: 1  
   selector:
     matchLabels:
-      app: nodejs
+      app: nodejs-app
   template:
     metadata:
       labels:
-        app: nodejs
+        app: nodejs-app
     spec:
       containers:
       - name: nodejs-app
