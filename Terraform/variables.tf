@@ -96,5 +96,17 @@ variable "svc-data" {
         app = "nodejs"
       }
     }
+
+    nexus_repo = {
+      name = "docker"
+      port = 5000
+      target_port = 5000
+      namespace = 1 // tools ns
+      type = "ClusterIP"
+      labels = {
+      app = "nexus" 
+    }
+
+    }
   }
 }
