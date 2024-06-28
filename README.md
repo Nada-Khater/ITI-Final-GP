@@ -46,7 +46,11 @@ This project automates the CI/CD pipeline using Jenkins for deploying a Node.js 
 
 
 ### 3. Tools namespace will have pod for Jenkins and Nexus(installed using Terraform)
+
 - create [Jenkins Deployment](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/jenkins-deploy.tf) and [Nexus Deployment](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/nexus-deploy.tf) .
+
+![deploys](https://github.com/Nada-Khater/ITI-Final-GP/assets/71197108/fd21db12-3646-409e-89cf-37357b837607)
+
 
 - create services for Jenkins , Nexus , Docker.
 
@@ -69,6 +73,9 @@ resource "kubernetes_service" "services" {
 }
 ```
 
+![services](https://github.com/Nada-Khater/ITI-Final-GP/assets/71197108/187db74b-aa88-4696-bfbe-319b08e81447)
+
+
 - create Service Account For Jenkins.
 
 ```
@@ -79,6 +86,10 @@ resource "kubernetes_service_account" "jenkins-SA" {
   }
 }
 ```
+
+
+![SA](https://github.com/Nada-Khater/ITI-Final-GP/assets/71197108/32e8f641-a1bf-4cda-b47d-c3ab29575e2c)
+
 
 - create Role and Bind it to Jenkins.
 
@@ -96,6 +107,9 @@ resource "kubernetes_service_account" "jenkins-SA" {
   }
 }
  ```
+
+![role](https://github.com/Nada-Khater/ITI-Final-GP/assets/71197108/0b6aef5c-a0ac-4063-aa30-e3e4f9cdf4ab)
+
 
  ```
  resource "kubernetes_role_binding" "jenkins_role_binding" {
@@ -117,6 +131,9 @@ resource "kubernetes_service_account" "jenkins-SA" {
   }
 }
  ```
+
+![rb](https://github.com/Nada-Khater/ITI-Final-GP/assets/71197108/f9157728-cb30-423f-9130-d72e36a50e6f)
+
 
 ### 4. Dev namespace will run two pods: one for nodejs application and another for MySQL DB
 - Create k8s deployment for mysql in `dev` namespace. [mysql-deploy.tf](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/mysql-deploy.tf)
