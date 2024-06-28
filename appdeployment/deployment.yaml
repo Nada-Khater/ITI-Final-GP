@@ -39,3 +39,7 @@ spec:
             secretKeyRef:
               name: mysql-secret
               key: UserPassword
+        - name: MYSQL_HOST
+          value: mysql-service.dev.svc.cluster.local
+        - name: MYSQL_PORT
+          value: "3306"
