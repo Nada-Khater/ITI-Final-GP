@@ -87,13 +87,13 @@ variable "svc-data" {
     }
 
     nodejs = {
-      name        = "nodejs"
+      name        = "nodejs-app"
       port        = 3000
       target_port = 3000
       namespace   = 0     // dev ns
       type        = "NodePort"
       labels      = {
-        app = "nodejs"
+        app = "nodejs-app"
       }
     }
 
