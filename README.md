@@ -45,7 +45,78 @@ This project automates the CI/CD pipeline using Jenkins for deploying a Node.js 
   ![Screenshot from 2024-06-28 20-14-28](https://github.com/Nada-Khater/ITI-Final-GP/assets/71197108/4d39e33f-1c2f-4340-85af-ec270bfbc889)
 
 
-### 3. Tools namespace will have pod for Jenkins and nexus(installed using Terraform)
+### 3. Tools namespace will have pod for Jenkins and Nexus(installed using Terraform)
+- create [Jenkins Deployment](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/jenkins-deploy.tf) and [Nexus Deployment](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/nexus-deploy.tf) .
+
+- create services for Jenkins , Nexus , Docker.
+
+```
+resource "kubernetes_service" "services" {
+  for_each = var.svc-data
+  metadata {
+    name      = each.value.name
+    namespace = var.ns-names[each.value.namespace]
+    labels = each.value.labels
+  }
+  spec {
+    selector = each.value.labels
+    port {
+      port        = each.value.port
+      target_port = each.value.target_port
+    }
+    type = each.value.type
+  }
+}
+```
+
+- create Service Account For Jenkins.
+
+```
+resource "kubernetes_service_account" "jenkins-SA" {
+  metadata {
+    name = "jenkins-service-account"
+    namespace = var.ns-names[1]
+  }
+}
+```
+
+- create Role and Bind it to Jenkins.
+
+ ```
+ resource "kubernetes_role" "jenkins_role" {
+  metadata {
+    name      = "jenkins-role"
+    namespace = var.ns-names[1]
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["pods", "pods/log", "services", "deployments", "configmaps", "secrets"]
+    verbs      = ["get", "list", "create", "update", "delete"]
+  }
+}
+ ```
+
+ ```
+ resource "kubernetes_role_binding" "jenkins_role_binding" {
+  metadata {
+    name      = "jenkins_role_binding"
+    namespace = var.ns-names[1]
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = kubernetes_service_account.jenkins-SA.metadata[0].name
+    namespace = var.ns-names[1]
+  }
+
+  role_ref {
+    kind     = "Role"
+    name     = kubernetes_role.jenkins_role.metadata[0].name
+    api_group = "rbac.authorization.k8s.io"
+  }
+}
+ ```
 
 ### 4. Dev namespace will run two pods: one for nodejs application and another for MySQL DB
 - Create k8s deployment for mysql in `dev` namespace. [mysql-deploy.tf](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/mysql-deploy.tf)
