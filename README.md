@@ -86,7 +86,9 @@ This project automates the CI/CD pipeline using Jenkins for deploying a Node.js 
     terraform init
     terraform apply --var-file mysql.tfvars
     ```
-<img src="https://github.com/Nada-Khater/ITI-Final-GP/assets/75952748/00d447e6-f24a-4c4b-9502-fe15eb530c51" width="920">
+- Check all resources in `dev` namespace.
+
+  <img src="https://github.com/Nada-Khater/ITI-Final-GP/assets/75952748/00d447e6-f24a-4c4b-9502-fe15eb530c51" width="920">
 
 ### 5. Create a Jenkins pipeline job to do the following:
   - Checkout code from https://github.com/mahmoud254/jenkins_nodejs_example.git
