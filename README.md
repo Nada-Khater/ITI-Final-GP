@@ -39,6 +39,8 @@ This project automates the CI/CD pipeline using Jenkins for deploying a Node.js 
     }
   }
   ```
+  - Verify namespace creation.
+  
 
 ### 3. Tools namespace will have pod for Jenkins and nexus(installed using Terraform)
 
