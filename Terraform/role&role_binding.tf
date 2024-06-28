@@ -7,6 +7,11 @@ resource "kubernetes_cluster_role" "jenkins_role" {
     resources  = ["*"]
     verbs      = ["*"]
   }
+  rule {
+    api_groups = ["apps"]
+    resources  = ["deployments"]
+    verbs      = ["get", "list", "watch", "create", "update", "patch", "delete"]
+  }
 }
 
 resource "kubernetes_cluster_role_binding" "jenkins_role_binding" {
@@ -16,7 +21,7 @@ resource "kubernetes_cluster_role_binding" "jenkins_role_binding" {
 
   subject {
     kind      = "ServiceAccount"
-    name      = kubernetes_cluster_role.jenkins_role.metadata[0].name
+    name      = kubernetes_service_account.jenkins-SA.metadata[0].name
     namespace = var.ns-names[1]
   }
 
