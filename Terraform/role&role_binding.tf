@@ -4,8 +4,8 @@ resource "kubernetes_cluster_role" "jenkins_role" {
   }
   rule {
     api_groups = [""]
-    resources  = ["pods", "pods/log", "services", "deployments", "configmaps", "secrets"]
-    verbs      = ["get", "list", "create", "update", "delete"]
+    resources  = ["*"]
+    verbs      = ["*"]
   }
 }
 
@@ -26,4 +26,3 @@ resource "kubernetes_cluster_role_binding" "jenkins_role_binding" {
     api_group = "rbac.authorization.k8s.io"
   }
 }
-
