@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    environment {
+        registry_url = '10.98.50.17:5000/repository/app-repo/'
+        registry_credentials_id = 'nexus'
+        image_name = 'app-nodejs'
+        image_tag = 'latest'
+    }
+
+    stages {
+        stage(clone) {
+            steps {
+                git branch: 'k8s_task', url: 'https://github.com/mahmoud254/jenkins_nodejs_example'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    sh "docker build -t ${image_name}:${image_tag} -f dockerfile ."
+                }
+            }
+        }
+
+        stage('Login to Registry') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: registry_credentials_id, passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        sh "echo ${PASSWORD} | docker login ${registry_url} -u ${USERNAME} --password ${PASSWORD}"
+                    }
+                }
+            }
+        }
+
+        stage('Push') {
+            steps {
+                script {
+                    sh "docker tag ${image_name}:${image_tag} ${registry_url}${image_name}:${image_tag}"
+                    sh "docker push ${registry_url}${image_name}:${image_tag}"
+                }
+            }
+        }
+
+    }
+}
