@@ -88,7 +88,7 @@ variable "svc-data" {
 
     nodejs = {
       name        = "nodejs"
-      port        = 80
+      port        = 3000
       target_port = 3000
       namespace   = 0     // dev ns
       type        = "NodePort"
