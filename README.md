@@ -20,6 +20,26 @@ This project automates the CI/CD pipeline using Jenkins for deploying a Node.js 
 
 ### 2. K8s instance will have two Namespaces: tools and dev (installed using Terraform)
 
+- In [variables.tf](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/variables.tf) define variable for namespaces.
+
+```
+variable "ns-names" {
+  type = list(string)
+  default = [ "dev", "tools" ]
+}
+```
+
+- In [namespaces.tf](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/namespaces.tf) define your resource.
+
+```
+resource "kubernetes_namespace" "ns" {
+  count = length(var.ns-names)
+  metadata {
+    name = var.ns-names[count.index]
+  }
+}
+```
+
 ### 3. Tools namespace will have pod for Jenkins and nexus(installed using Terraform)
 
 ### 4. Dev namespace will run two pods: one for nodejs application and another for MySQL DB
