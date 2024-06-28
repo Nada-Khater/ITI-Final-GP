@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-deployment
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-app
+  template:
+    metadata:
+      labels:
+        app: nodejs-app
+    spec:
+      serviceAccountName: jenkins
+      containers:
+        - name: nodejs-app
+          image: 10.111.33.70:5000/repository/nexus-repo/nodejs-app:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-secrets
+                  key: HOST
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: mysql-password
+            - name: USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-secrets
+                  key: USERNAME
+            - name: DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-secrets
+                  key: DATABASE

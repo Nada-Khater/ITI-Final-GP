@@ -19,27 +19,21 @@ spec:
         ports:
         - containerPort: 3000  
         env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: Mysql_RootPassword
-        - name: MYSQL_DATABASE
+        - name: HOST
+          value: mysql
+        
+        - name: DATABASE
           valueFrom:
             secretKeyRef:
               name: mysql-secret
               key: Mysql_dbname
-        - name: MYSQL_USER
+        - name: USERNAME
           valueFrom:
             secretKeyRef:
               name: mysql-secret
               key: UserName
-        - name: MYSQL_PASSWORD
+        - name: PASSWORD
           valueFrom:
             secretKeyRef:
               name: mysql-secret
               key: UserPassword
-        - name: MYSQL_HOST
-          value: mysql-service.dev.svc.cluster.local
-        - name: MYSQL_PORT
-          value: "3306"
