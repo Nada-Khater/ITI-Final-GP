@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    
+    stages {
+         stage('Install Kubectl') {
+            steps {
+                sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+                sh 'chmod +x kubectl'
+                sh 'mv kubectl /usr/local/bin'
+                sh 'kubectl version --client'
+            }
+         }
+             
+          stage('Deploy Image on minikube') {
+            steps {
+                // clone repo
+                git branch:'main' , url:'https://github.com/Nada-Khater/ITI-Final-GP.git' 
+                
+                // Deploy the app from the Nexus registry to minikube
+                sh """
+                cd appdeployment
+                kubectl apply -f deployment.yaml 
+                """
+            }
+        }
+    }
+}
