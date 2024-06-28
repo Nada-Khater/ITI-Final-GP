@@ -22,28 +22,78 @@ This project automates the CI/CD pipeline using Jenkins for deploying a Node.js 
 
 - In [variables.tf](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/variables.tf) define variable for namespaces.
 
-```
-variable "ns-names" {
-  type = list(string)
-  default = [ "dev", "tools" ]
-}
-```
+  ``` python
+  variable "ns-names" {
+    type = list(string)
+    default = [ "dev", "tools" ]
+  }
+  ```
 
 - In [namespaces.tf](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/namespaces.tf) define your resource.
 
-```
-resource "kubernetes_namespace" "ns" {
-  count = length(var.ns-names)
-  metadata {
-    name = var.ns-names[count.index]
+  ``` python
+  resource "kubernetes_namespace" "ns" {
+    count = length(var.ns-names)
+    metadata {
+      name = var.ns-names[count.index]
+    }
   }
-}
-```
+  ```
+  - Verify namespace creation.
+
+
+  ![Screenshot from 2024-06-28 20-14-28](https://github.com/Nada-Khater/ITI-Final-GP/assets/71197108/4d39e33f-1c2f-4340-85af-ec270bfbc889)
+
 
 ### 3. Tools namespace will have pod for Jenkins and nexus(installed using Terraform)
 
 ### 4. Dev namespace will run two pods: one for nodejs application and another for MySQL DB
-<img src="https://github.com/Nada-Khater/ITI-Final-GP/assets/75952748/00d447e6-f24a-4c4b-9502-fe15eb530c51" width="920">
+- Create k8s deployment for mysql in `dev` namespace. [mysql-deploy.tf](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/mysql-deploy.tf)
+- Define k8s services for both `mysql` and `nodejs app`. [variables.tf](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/services.tf)
+
+  - MySql default values:
+    ``` python 
+    mysql = {
+        name        = "mysql"
+        port        = 3306
+        target_port = 3306
+        namespace   = 0     // dev ns
+        type        = "ClusterIP"
+        labels      = {
+          app = "mysql"
+        }
+      }
+    ```
+  - Nodejs app default values:
+    ``` python 
+    nodejs = {
+          name        = "nodejs"
+          port        = 80
+          target_port = 3000
+          namespace   = 0     // dev ns
+          type        = "NodePort"
+          labels      = {
+            app = "nodejs"
+          }
+        }
+    ```
+- Configured the needed mysql credentials as `k8s secret`. [mysql-secret.tf](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/mysql-secret.tf)
+  - Add your mysql credentials here:
+    ``` python
+    mysql_root_password = "your-root-password"
+    mysql_db_name       = "your-db-name"
+    mysql_user_name     = "your-username"
+    mysql_user_password = "your-user-password"
+    ```
+
+  - To run the terraform code 
+    ```
+    terraform init
+    terraform apply --var-file mysql.tfvars
+    ```
+- Check all resources in `dev` namespace.
+
+  <img src="https://github.com/Nada-Khater/ITI-Final-GP/assets/75952748/00d447e6-f24a-4c4b-9502-fe15eb530c51" width="920">
 
 ### 5. Create a Jenkins pipeline job to do the following:
   - Checkout code from https://github.com/mahmoud254/jenkins_nodejs_example.git
