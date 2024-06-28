@@ -22,7 +22,7 @@ resource "kubernetes_deployment" "jenkins" {
       spec {
         container {
           name  = "jenkins"
-          image = "jenkins/jenkins:lts"
+          image = "alaa872/final-gp-images"
           port {
             container_port = 8080
           }
