@@ -20,6 +20,15 @@ This project automates the CI/CD pipeline using Jenkins for deploying a Node.js 
 
 ### 2. K8s instance will have two Namespaces: tools and dev (installed using Terraform)
 
+- Before Creating any resourses , specify your provider.
+
+```
+provider "kubernetes" {
+  config_path    = "~/.kube/config"
+  config_context = "minikube"
+}
+```
+
 - In [variables.tf](https://github.com/Nada-Khater/ITI-Final-GP/blob/main/Terraform/variables.tf) define variable for namespaces.
 
   ``` python
