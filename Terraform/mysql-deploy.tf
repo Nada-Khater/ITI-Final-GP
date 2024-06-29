@@ -25,39 +25,19 @@ resource "kubernetes_deployment" "mysql" {
           image = "mysql:5.7"
           env {
             name  = "MYSQL_ROOT_PASSWORD"
-            value_from {
-              secret_key_ref {
-                name = "mysql-secret"
-                key  = "Mysql_RootPassword"
-              }
-            }
+            value = var.mysql_root_password
           }
           env {
             name  = "MYSQL_DATABASE"
-            value_from {
-              secret_key_ref {
-                name = "mysql-secret"
-                key  = "Mysql_dbname"
-              }
-            }
+            value = var.mysql_db_name
           }
           env {
             name  = "MYSQL_USER"
-            value_from {
-              secret_key_ref {
-                name = "mysql-secret"
-                key  = "UserName"
-              }
-            }
+            value = var.mysql_user_name
           }
           env {
             name  = "MYSQL_PASSWORD"
-            value_from {
-              secret_key_ref {
-                name = "mysql-secret"
-                key  = "UserPassword"
-              }
-            }
+            value = var.mysql_user_password
           }
           port {
             container_port = 3306
